@@ -1,0 +1,7 @@
+aws-keys.sh
+terraform.tfvars
+.terraform
+*.tfstate.backup
+*.tfstate
+.terraform.tfstate.lock.info
+ansible/roles/docker/tasks/docker.retry
