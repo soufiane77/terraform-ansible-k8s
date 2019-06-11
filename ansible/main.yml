@@ -1,0 +1,20 @@
+---
+# This playbook deploys a simple kubeadm install.
+- name: Bootstrap Tasks
+  hosts: 
+    - kube-master
+    - kube-node
+  remote_user: "{{ ansible_remote_user }}"
+  gather_facts: False
+  roles:
+    - common
+
+- name: Install Kubernetes master
+  hosts: kube-master
+  remote_user: "{{ ansible_remote_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - docker
+    - kubeadm
+    - master

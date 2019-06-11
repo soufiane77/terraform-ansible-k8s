@@ -23,7 +23,7 @@ variable "master-count" {
   default="1"
 }
 variable "node-count" {
-  default="3"
+  default="1"
 }
 variable vpc_cidr {
   default = "172.32.0.0/16"
@@ -90,11 +90,11 @@ resource "aws_instance" "k8s-master" {
   ami               = "${var.ami}"
   instance_type     = "${var.image-flavor}"
   key_name          = "${var.key-pair}"
+  #associate_public_ip_address = true
+  # public_ip = "3.85.100.152"  
   #subnet_id = "${aws_subnet.kubernetes.id}"
   #private_ip = "${cidrhost(var.vpc_cidr, 20 + count.index)}"
   vpc_security_group_ids = ["${aws_security_group.dep-k8s-sg.id}"]
-  associate_public_ip_address = true
-
   tags = {
     Name            = "${var.tag-name}-k8s-master-${count.index}"
   }
@@ -106,12 +106,19 @@ resource "aws_instance" "k8s-node" {
   ami               = "${var.ami}"
   instance_type     = "${var.image-flavor}"
   key_name          = "${var.key-pair}"
+  #associate_public_ip_address = true
+  #public_ip = "54.159.63.85"
   #subnet_id = "${aws_subnet.kubernetes.id}"
   #private_ip = "${cidrhost(var.vpc_cidr, 20 + count.index)}"
   vpc_security_group_ids = ["${aws_security_group.dep-k8s-sg.id}"]
-  associate_public_ip_address = true
-
   tags = {
     Name  = "${var.tag-name}-k8s-node-${count.index}"
   }
+}
+
+output "master_ip" {
+  value = "${aws_instance.k8s-master.*.public_ip}"
+}
+output "worker_ips" {
+  value = "${aws_instance.k8s-node.*.public_ip}"
 }

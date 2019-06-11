@@ -1,0 +1,34 @@
+
+kubeadm_token: db85f7.cff657b31b20eed5
+
+master_ip: "{{ hostvars['master1']['ansible_eth0']['ipv4']['address'] }}"
+
+ansible_remote_user: ubuntu
+
+kubeadm_reset_before_init: true
+
+delete_kube_dns: false
+
+deploy_sample_apps: true
+
+deploy_istio: true
+
+contiv_nets:
+  # This network name is required for host to access pods.
+  contivh1:
+    net_type: -n infra
+    net_sub:  -s 192.0.2.0/24
+    net_gw:   -g 192.0.2.1
+  # This is used for pods that do not have a io.contiv.network label  
+  default-net:
+    net_type: -n data
+    net_sub:  -s 172.16.10.10-172.16.10.250/24
+    net_gw:   -g 172.16.10.1
+  blue:
+    net_type: -n data
+    net_sub:  -s 172.17.0.5-172.17.15.250/20
+    net_gw:   -g 172.17.0.1
+  green:
+    net_type: -n data
+    net_sub:  -s 172.18.0.5-172.18.15.250/20
+    net_gw:   -g 172.18.0.1
